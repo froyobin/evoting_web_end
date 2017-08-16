@@ -19,13 +19,17 @@ comes with virtualenv built-in. So create a virtual env by:
 
     1. `$ python3 -m venv evoting`
     2. `$ . evoting/bin/activate`
-
+	
 Install all dependencies:
 
     pip install -r requirements.txt
 
-Run migrations:
+Create the setting file
+    cp settings/local.sample.env settings/local.env       
 
+
+Run migrations:
+ 
     python manage.py migrate
 
 ### Detailed instructions
