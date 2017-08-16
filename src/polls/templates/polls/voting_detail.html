@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load thumbnail %}
 
 {% block title %}{{ block.super }}Home{% endblock %}
 
@@ -40,14 +41,22 @@
 <a name="about"></a>
 
 <div class="container">
+{% csrf_token %}
   <div class="row">
 
-
-  {% for question in latest_question_list %}
+  {%for choice in question.choice_set.all %}
        <div class="col-lg-4">
-        <h2><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></h2>
-       <p>{{question.question_description }} </p>
-      <p><a class="btn btn-primary" href="{% url 'polls:detail' question.id %}" role="button">View details &raquo;</a></p>
+        <h2><a>{{ choice.Candidate_Name }}</a>
+
+        </h2>
+            <div class="text-center">
+      <div class="col-sm-5"><img title="profile picture" class="img-circle img-responsive"  src=
+                                          "{% thumbnail choice.Candidate_Picture|default:'default_profile.png' 480x480 crop %}">
+                </div>
+            </div>
+       <p>{{choice.Candidate_Description}} </p>
+      <p><a class="btn btn-primary" href="
+{% url 'polls:detail' question.id %}" role="button">Vote Me &raquo;</a></p>
        </div>
     {% endfor %}
 

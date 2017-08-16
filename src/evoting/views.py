@@ -13,7 +13,7 @@ class HomePage(generic.ListView):
         """
         return Question.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[0]
+        ).order_by('-pub_date')
 
 class AboutPage(generic.TemplateView):
     template_name = "about.html"
