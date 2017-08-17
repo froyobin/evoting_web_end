@@ -55,8 +55,20 @@
                 </div>
             </div>
        <p>{{choice.Candidate_Description}} </p>
-      <p><a class="btn btn-primary" href="
-{% url 'polls:detail' question.id %}" role="button">Vote Me &raquo;</a></p>
+
+      <!--<p><a class="btn btn-primary"-->
+            <!--onclick="myFunction(this)"-->
+            <!--role="button"-->
+            <!--id="{{ choice.id}}"-->
+      <!--&gt;Vote Me &raquo;</a></p>-->
+
+           <section class="button-demo">
+				<button class="ladda-button" data-color="blue"
+                        data-style="slide-down" onclick="myFunction(this)" id="{{ choice.id}}"
+                >Cast Vote</button>
+			</section>
+
+
        </div>
     {% endfor %}
 
@@ -67,5 +79,66 @@
 
 {% block scripts %}
 <script src="{% static 'site/js/site.js' %}"></script>
+<script src="{% static 'site/dist_loading/spin.min.js' %}"></script>
+<script src="{% static 'site/dist_loading/ladda.min.js' %}"></script>
+
+
+<script>
+    function myFunction(choice) {
+    //    document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
+
+
+         $.post("{% url 'polls:vote' question.id %}",
+             {choice: choice.id,csrfmiddlewaretoken:"{{csrf_token}}"},
+             function(result){
+               alert(result)
+        });
+
+
+//     $(form).ajaxForm({
+//    url: url,
+//    type: 'POST',
+//    success:function () {
+//        window.location.href = herf
+//    }
+//    })
+
+           Ladda.bind( '.button-demo button', { timeout: 2000 } );
+    }
+
+	// Bind normal buttons
+
+
+    // Bind progress buttons and simulate loading progress
+//    Ladda.bind( '.progress-demo button', {
+//        callback: function( instance ) {
+//            var progress = 0;
+//            var interval = setInterval( function() {
+//                progress = Math.min( progress + Math.random() * 0.1, 1 );
+//                instance.setProgress( progress );
+//
+//                if( progress === 1 ) {
+//                    instance.stop();
+//                    clearInterval( interval );
+//                }
+//            }, 200 );
+//        }
+//    } );
+
+    // You can control loading explicitly using the JavaScript API
+    // as outlined below:
+
+//     var l = Ladda.create( document.querySelector( 'button' ) );
+//     l.start();
+//
+//     l.stop();
+//     l.toggle();
+//     l.isLoading();
+//     l.setProgress( 0-1 );
+
+
+
+
+</script>
 {% endblock scripts %}
 

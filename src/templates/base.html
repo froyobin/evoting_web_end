@@ -19,6 +19,8 @@
     <!-- Custom styles for this site -->
     {% block styles %}
     <link href="{% static 'site/css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'site/dist_loading/ladda.min.css' %}" rel="stylesheet">
+    <link href="{% static 'site/css_loading/demo.css' %}" rel="stylesheet">
     {% endblock styles %}
 
     <!-- Custom tags for the head tag -->
@@ -28,6 +30,7 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
 
