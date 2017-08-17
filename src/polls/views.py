@@ -3,8 +3,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-
 from .models import Choice, Question
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 class IndexView(generic.ListView):
@@ -21,7 +22,6 @@ class IndexView(generic.ListView):
             pub_date__lte=timezone.now()
         ).order_by('-pub_date')[:5]
 
-
 class DetailView(generic.DetailView):
     model = Question
     # template_name = 'polls/detail.html'
@@ -32,6 +32,10 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DetailView, self).dispatch(request, *args, **kwargs)
 
 
 class ResultsView(generic.DetailView):
