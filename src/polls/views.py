@@ -6,12 +6,18 @@ from django.utils import timezone
 from .models import Choice, Question
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import UserPassesTestMixin
 
-
-class IndexView(generic.ListView):
+class IndexView(UserPassesTestMixin, generic.ListView):
     template_name = 'polls/index.html'
 
     context_object_name = 'latest_question_list'
+    login_url = '/about'
+    redirect_field_name = 'redirect_to'
+
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
     def get_queryset(self):
         """
