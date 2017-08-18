@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+
+{% block title %}{{ block.super }}Home{% endblock %}
+
+{% block navbar-left %}
+  {% include "_navbar.html" with active_link="home" %}
+{% endblock %}
+
+{% block navbar-right %}
+  {% if not user.is_authenticated %}
+<a class="btn btn-default" href="{% url 'accounts:login' %}" role="button">Log in</a>
+<a class="btn btn-primary" href="{% url 'accounts:signup' %}" role="button">Sign up</a>
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
+{% block splash %}
+  <div class="jumbotron jumbotron-carousel corporate-jumbo">
+    <!--<div class="container">-->
+      <div class="row">
+        <div class="col-md-8 col-sm-8">
+          <h1>Evoting Admin Pannel</h1>
+	  <!--<a class="btn btn-primary" href="{% url 'accounts:signup' %}"-->
+         <!--role="button">Initilize Voting</a>-->
+                <section class="progress-demo">
+                <!--<section class="button-demo">-->
+               <button id= "INIT" class="ladda-button" data-color="mint"
+                       data-style="expand-right" data-size="xl">Initilize Voting</button>
+                    </section>
+
+        </div>
+        <div class="col-md-4 col-sm-4">
+
+        </div>
+      </div>
+    <!--</div>-->
+  </div>
+{% endblock splash %}
+
+<!--{% block container %}-->
+<!--&lt;!&ndash; Benefits of the Django application &ndash;&gt;-->
+<!--<a name="about"></a>-->
+
+<!--<div class="container">-->
+<!--{% csrf_token %}-->
+  <!--<div class="row">-->
+
+  <!--{%for choice in question.choice_set.all %}-->
+       <!--<div class="col-lg-4">-->
+        <!--<h2><a>{{ choice.Candidate_Name }}</a>-->
+
+        <!--</h2>-->
+            <!--<div class="text-center">-->
+      <!--<div class="col-sm-5"><img title="profile picture" class="img-circle img-responsive"  src=-->
+                                          <!--"{% thumbnail choice.Candidate_Picture|default:'default_profile.png' 480x480 crop %}">-->
+                <!--</div>-->
+            <!--</div>-->
+       <!--<p>{{choice.Candidate_Description}} </p>-->
+
+      <!--&lt;!&ndash;<p><a class="btn btn-primary"&ndash;&gt;-->
+            <!--&lt;!&ndash;onclick="myFunction(this)"&ndash;&gt;-->
+            <!--&lt;!&ndash;role="button"&ndash;&gt;-->
+            <!--&lt;!&ndash;id="{{ choice.id}}"&ndash;&gt;-->
+      <!--&lt;!&ndash;&gt;Vote Me &raquo;</a></p>&ndash;&gt;-->
+
+           <!--<section class="button-demo">-->
+				<!--<button class="ladda-button" data-color="blue"-->
+                        <!--data-style="slide-down" onclick="myFunction(this)" id="{{ choice.id}}"-->
+                <!--&gt;Cast Vote</button>-->
+			<!--</section>-->
+
+
+       <!--</div>-->
+    <!--{% endfor %}-->
+
+  <!--</div>-->
+<!--</div>-->
+
+<!--{% endblock container %}-->
+
+{% block scripts %}
+<script src="{% static 'site/js/site.js' %}"></script>
+<script src="{% static 'site/dist_loading/spin.min.js' %}"></script>
+<script src="{% static 'site/dist_loading/ladda.min.js' %}"></script>
+
+<script>
+
+			// Bind normal buttons
+			Ladda.bind( '.button-demo button', { timeout: 2000 } );
+
+			// Bind progress buttons and simulate loading progress
+			Ladda.bind( '.progress-demo button', {
+				callback: function( instance ) {
+					var progress = 0;
+					var interval = setInterval( function() {
+						progress = Math.min( progress + Math.random() * 0.1, 1 );
+						instance.setProgress( progress );
+						if( progress === 1 ) {
+							instance.stop();
+							clearInterval( interval );
+						}
+					}, 200 );
+                    document.getElementById("INIT").innerHTML = "Initialization"
+				}
+			}
+			);
+
+			// You can control loading explicitly using the JavaScript API
+			// as outlined below:
+
+			// var l = Ladda.create( document.querySelector( 'button' ) );
+			// l.start();
+			// l.stop();
+			// l.toggle();
+			// l.isLoading();
+			// l.setProgress( 0-1 );
+
+</script>
+
+
+
+
+
+{% endblock scripts %}
+

@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 class IndexView(UserPassesTestMixin, generic.ListView):
-    template_name = 'polls/index.html'
+    template_name = 'polls/voting_admin.html'
 
     context_object_name = 'latest_question_list'
     login_url = '/about'
