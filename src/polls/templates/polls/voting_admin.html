@@ -208,7 +208,7 @@ h2.invisible {visibility:hidden}
     					var interval = setInterval( function() {
     						progress = Math.min( progress + Math.random() * 0.1, 1 );
     						instance.setProgress( progress );
-    					}, 200 );
+    					}, 400 );
 
     			var choices = document.getElementById("candidate").innerHTML
           $.post('http://127.0.0.1:3000/admin/result/',
@@ -217,6 +217,8 @@ h2.invisible {visibility:hidden}
                      function(result){
                         instance.stop();
                         clearInterval( interval );
+                          var myWindow = window.open("{% url 'accounts:signup' %}", "_self");
+                myWindow.document.open("{% url 'accounts:signup' %}");
                 });
                     document.getElementById("RESULT").innerHTML = "Done"
 				}
