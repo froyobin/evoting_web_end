@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 class IndexView(UserPassesTestMixin, generic.ListView):
     template_name = 'polls/voting_admin.html'
-
+    model = Question
     context_object_name = 'latest_question_list'
     login_url = '/about'
     redirect_field_name = 'redirect_to'

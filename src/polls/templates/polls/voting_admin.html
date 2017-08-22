@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+<style type="text/css">
+h2.invisible {visibility:hidden}
+</style>
+
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% load thumbnail %}
@@ -21,10 +25,25 @@
 
 {% block splash %}
   <div class="jumbotron jumbotron-carousel corporate-jumbo">
-    <!--<div class="container">-->
-      <div class="row">
-        <div class="col-md-8 col-sm-8">
+    <div class="container">
+        <!--< class="col-md-8 col-sm-8">-->
           <h1>Evoting Admin Pannel</h1>
+
+
+</div>
+</div>
+
+  {% for question in latest_question_list %}
+       <div class="col-lg-4">
+           <section class="progress-demo">
+        <h2>{{ question.question_text }}</h2>
+           </section>
+      <!--<p><a class="btn btn-primary" href="{% url 'polls:detail' question.id %}" role="button">View details &raquo;</a></p>-->
+           <h2 class="invisible", id="candidate">{{question.choice_set.count}}</h2>
+
+
+
+
 	  <!--<a class="btn btn-primary" href="{% url 'accounts:signup' %}"-->
          <!--role="button">Initilize Voting</a>-->
                 <section class="progress-demo">
@@ -32,14 +51,24 @@
                <button id= "INIT" class="ladda-button" data-color="mint"
                        data-style="expand-right" data-size="xl">Initilize Voting</button>
                     </section>
+                    <h2 class="invisible">placeholder</h2>
+                 <section class="progress-demo-add">
+                <!--<section class="button-demo">-->
+               <button id= "ADD" class="ladda-button" data-color="mint"
+                       data-style="expand-right" data-size="xl">Add Ballots</button>
+                    </section>
+                    <h2 class="invisible">placeholder</h2>
+               <section class="progress-demo-result">
+                <!--<section class="button-demo">-->
+               <button name="aabbccdd" id= "RESULT" class="ladda-button"
+                       data-color="mint"
+                       data-style="expand-right" data-size="xl">DONE
+                   RESULT</button>
+                    </section>
 
-        </div>
-        <div class="col-md-4 col-sm-4">
 
-        </div>
-      </div>
-    <!--</div>-->
-  </div>
+    </div>
+   {% endfor %}
 {% endblock splash %}
 
 <!--{% block container %}-->
@@ -81,7 +110,7 @@
   <!--</div>-->
 <!--</div>-->
 
-<!--{% endblock container %}-->
+{% endblock container %}
 
 {% block scripts %}
 <script src="{% static 'site/js/site.js' %}"></script>
@@ -89,26 +118,113 @@
 <script src="{% static 'site/dist_loading/ladda.min.js' %}"></script>
 
 <script>
-
 			// Bind normal buttons
 			Ladda.bind( '.button-demo button', { timeout: 2000 } );
 
 			// Bind progress buttons and simulate loading progress
 			Ladda.bind( '.progress-demo button', {
 				callback: function( instance ) {
-					var progress = 0;
-					var interval = setInterval( function() {
-						progress = Math.min( progress + Math.random() * 0.1, 1 );
-						instance.setProgress( progress );
-						if( progress === 1 ) {
-							instance.stop();
-							clearInterval( interval );
-						}
-					}, 200 );
-                    document.getElementById("INIT").innerHTML = "Initialization"
+
+    					var progress = 0;
+    					var interval = setInterval( function() {
+    						progress = Math.min( progress + Math.random() * 0.1, 1 );
+    						instance.setProgress( progress );
+//    						if( progress === 1 ) {
+//    							instance.stop();
+//    						}
+    					}, 200 );
+
+//                 $.post('http://localhost:3000/admin/init',
+//                     function(result){
+//                         alert(result)
+//                         alert("aa")
+//                         instance.stop()
+//                         clearInterval( interval );
+//                });
+
+
+//                    $.ajax({
+//                        type: "POST",
+//                        dataType: 'application/json',
+////                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+//                        headers:{'Access-Control-Allow-Origin': '*'},
+//                        url: 'http://127.0.0.1:3000/admin/init/',
+//                        data:{csrfmiddlewaretoken:"{{csrf_token}}"},
+////                        username: 'user',
+////                        password: 'pass',
+//                        crossDomain : true,
+//                        xhrFields: {
+//                            withCredentials: false
+//                        }
+//                    })
+//                        .done(function( data ) {
+//                            console.log("done");
+//                            alert("done")
+//                        })
+//                        .fail( function(xhr, textStatus, errorThrown) {
+//                            alert("eeeeeeeeeeeeeee")
+//                            alert(xhr.responseText);
+//                            alert(textStatus);
+//                        });
+
+
+          $.post('http://127.0.0.1:3000/admin/init/',
+                     {csrfmiddlewaretoken:"{{csrf_token}}"},
+                     function(result){
+                        instance.stop();
+                        clearInterval( interval );
+                });
+
+                    document.getElementById("INIT").innerHTML = "Done"
 				}
 			}
 			);
+
+			Ladda.bind( '.progress-demo-add button', {
+				callback: function( instance ) {
+
+                var progress = 0;
+                var interval = setInterval( function() {
+                    progress = Math.min( progress + Math.random() * 0.1, 1 );
+                    instance.setProgress( progress );
+                }, 200 );
+
+
+          $.post('http://127.0.0.1:3000/admin/add/',
+                     {csrfmiddlewaretoken:"{{csrf_token}}"},
+                     function(result){
+                        instance.stop();
+                        clearInterval( interval );
+                });
+                    document.getElementById("ADD").innerHTML = "Done"
+				}
+			}
+			);
+
+			Ladda.bind( '.progress-demo-result button', {
+				callback: function( instance ) {
+
+    					var progress = 0;
+    					var interval = setInterval( function() {
+    						progress = Math.min( progress + Math.random() * 0.1, 1 );
+    						instance.setProgress( progress );
+    					}, 200 );
+
+    			var choices = document.getElementById("candidate").innerHTML
+          $.post('http://127.0.0.1:3000/admin/result/',
+//                     {csrfmiddlewaretoken:"{{csrf_token}}",candidate:"{{ question.choice_set.count }}"},
+               {csrfmiddlewaretoken:"{{csrf_token}}",candidate:choices},
+                     function(result){
+                        instance.stop();
+                        clearInterval( interval );
+                });
+                    document.getElementById("RESULT").innerHTML = "Done"
+				}
+			}
+			);
+
+
+
 
 			// You can control loading explicitly using the JavaScript API
 			// as outlined below:

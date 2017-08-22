@@ -40,7 +40,7 @@ TEMPLATES = [
         },
     },
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 # Use 12factor inspired environment variables or from a file
 import environ
 env = environ.Env()
@@ -58,7 +58,7 @@ if exists(env_file):
 # Raises ImproperlyConfigured exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 # Crispy Form Theme - Bootstrap 3
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
