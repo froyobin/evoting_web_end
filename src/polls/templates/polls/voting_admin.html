@@ -2,6 +2,90 @@
 
 <style type="text/css">
 h2.invisible {visibility:hidden}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    -webkit-animation-name: fadeIn; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    bottom: 0;
+    background-color: #fefefe;
+    width: 100%;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+
+
+
+
 </style>
 
 {% load staticfiles %}
@@ -42,6 +126,12 @@ h2.invisible {visibility:hidden}
            <h2 class="invisible", id="candidate">{{question.choice_set.count}}</h2>
 
 
+           {% for choice in question.choice_set.all %}
+           <input hidden id="choice{{ forloop.counter }}"
+                  value="{{ choice.id }}" />
+    {% endfor %}
+
+
 
 
 	  <!--<a class="btn btn-primary" href="{% url 'accounts:signup' %}"-->
@@ -51,7 +141,7 @@ h2.invisible {visibility:hidden}
                <button id= "INIT" class="ladda-button" data-color="mint"
                        data-style="expand-right" data-size="xl">Initilize Voting</button>
                     </section>
-                    <h2 class="invisible">placeholder</h2>
+                    <h2 class="invisible", id="question_id">{{question.id}}</h2>
                  <section class="progress-demo-add">
                 <!--<section class="button-demo">-->
                <button id= "ADD" class="ladda-button" data-color="mint"
@@ -110,14 +200,56 @@ h2.invisible {visibility:hidden}
   <!--</div>-->
 <!--</div>-->
 
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>Modal Header</h2>
+    </div>
+    <div class="modal-body">
+        <p id="test2"></p>
+
+    </div>
+    <div class="modal-footer">
+      <h3>Modal Footer</h3>
+    </div>
+  </div>
+
+</div>
+
 {% endblock container %}
+
+
+
+
 
 {% block scripts %}
 <script src="{% static 'site/js/site.js' %}"></script>
 <script src="{% static 'site/dist_loading/spin.min.js' %}"></script>
 <script src="{% static 'site/dist_loading/ladda.min.js' %}"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
 
 <script>
+
+function arrayToTable(tableData) {
+    var table = $('<table></table>');
+    $(tableData).each(function (i, rowData) {
+        var row = $('<tr></tr>');
+        $(rowData).each(function (j, cellData) {
+            row.append($('<td>'+cellData+'</td>'));
+        });
+        table.append(row);
+    });
+    return table;
+}
+
+
+
+
 			// Bind normal buttons
 			Ladda.bind( '.button-demo button', { timeout: 2000 } );
 
@@ -211,21 +343,55 @@ h2.invisible {visibility:hidden}
     					}, 400 );
 
     			var choices = document.getElementById("candidate").innerHTML
+    			var question_id = document.getElementById("question_id").innerHTML
           $.post('http://127.0.0.1:3000/admin/result/',
 //                     {csrfmiddlewaretoken:"{{csrf_token}}",candidate:"{{ question.choice_set.count }}"},
                {csrfmiddlewaretoken:"{{csrf_token}}",candidate:choices},
                      function(result){
                         instance.stop();
                         clearInterval( interval );
-                          var myWindow = window.open("{% url 'accounts:signup' %}", "_self");
-                myWindow.document.open("{% url 'accounts:signup' %}");
                 });
-                    document.getElementById("RESULT").innerHTML = "Done"
+
+
+                // Get the modal
+                var modal = document.getElementById('myModal');
+
+
+                // Get the <span> element that closes the modal
+
+                modal.style.display = "block";
+
+                for (i = 0; i < choices; i++) {
+                    alert("choice"+i.toString())
+                }
+                var start_date="{{ question.choice_set.count }}";
+                alert(start_date)
+
+                  $('#test2').html(arrayToTable([
+                                [start_date,"Slegers",34],
+                                ["Tom","Stevens",25],
+                                ["An","Davies",28],
+                                ["Miet","Hansen",42],
+                                ["Eli","Morris",18]
+                            ]));
+
+                document.getElementById("RESULT").innerHTML = "Done"
 				}
 			}
 			);
+        var modal = document.getElementById('myModal');
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
 
-
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 
 
 			// You can control loading explicitly using the JavaScript API
