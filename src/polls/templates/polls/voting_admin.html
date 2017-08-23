@@ -127,9 +127,9 @@ h2.invisible {visibility:hidden}
 
 
            {% for choice in question.choice_set.all %}
-           <input hidden id="choice{{ forloop.counter }}"
-                  value="{{ choice.id }}" />
+           <p hidden id="choice{{ forloop.counter }}">{{ choice.Candidate_Name }}</p>
     {% endfor %}
+           <p hidden id="resultg"></p>
 
 
 
@@ -207,14 +207,14 @@ h2.invisible {visibility:hidden}
   <div class="modal-content">
     <div class="modal-header">
       <span class="close">&times;</span>
-      <h2>Modal Header</h2>
+      <h2> Result</h2>
     </div>
     <div class="modal-body">
         <p id="test2"></p>
 
     </div>
     <div class="modal-footer">
-      <h3>Modal Footer</h3>
+      <h3>----------------</h3>
     </div>
   </div>
 
@@ -350,6 +350,27 @@ function arrayToTable(tableData) {
                      function(result){
                         instance.stop();
                         clearInterval( interval );
+                        var array = result.split(';')
+
+                           for (i = 0; i < choices; i++) {
+                    var choice='choice'+(i+1).toString()
+                    var name = document.getElementById(choice).innerHTML;
+
+                    $('#test2').append(arrayToTable([
+                        [name,"：",array[i]],
+//                        ["Tom","Stevens",25],
+//                        ["An","Davies",28],
+                    ]));
+
+
+
+                }
+//                  $('#test2').append(arrayToTable([
+//                        ["trrc","Slegers",34],
+//                        ["Tom","Stevens",25],
+//                        ["An","Davies",28],
+//                    ]));
+
                 });
 
 
@@ -361,19 +382,10 @@ function arrayToTable(tableData) {
 
                 modal.style.display = "block";
 
-                for (i = 0; i < choices; i++) {
-                    alert("choice"+i.toString())
-                }
-                var start_date="{{ question.choice_set.count }}";
-                alert(start_date)
 
-                  $('#test2').html(arrayToTable([
-                                [start_date,"Slegers",34],
-                                ["Tom","Stevens",25],
-                                ["An","Davies",28],
-                                ["Miet","Hansen",42],
-                                ["Eli","Morris",18]
-                            ]));
+
+
+
 
                 document.getElementById("RESULT").innerHTML = "Done"
 				}
@@ -393,16 +405,6 @@ function arrayToTable(tableData) {
             }
         }
 
-
-			// You can control loading explicitly using the JavaScript API
-			// as outlined below:
-
-			// var l = Ladda.create( document.querySelector( 'button' ) );
-			// l.start();
-			// l.stop();
-			// l.toggle();
-			// l.isLoading();
-			// l.setProgress( 0-1 );
 
 </script>
 
