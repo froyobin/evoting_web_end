@@ -39,7 +39,7 @@
 {% block container %}
 <!-- Benefits of the Django application -->
 <a name="about"></a>
-
+<p hidden id="USERID">{{User.id}}</p>
 <div class="container">
 {% csrf_token %}
   <div class="row">
@@ -54,20 +54,18 @@
                                           "{% thumbnail choice.Candidate_Picture|default:'default_profile.png' 480x480 crop %}">
                 </div>
             </div>
+           <p hidden id="NUMCAN">{{question.choice_set.count}}</p>
+
        <p>{{choice.Candidate_Description}} </p>
 
-      <!--<p><a class="btn btn-primary"-->
-            <!--onclick="myFunction(this)"-->
-            <!--role="button"-->
-            <!--id="{{ choice.id}}"-->
-      <!--&gt;Vote Me &raquo;</a></p>-->
 
            <section class="button-demo">
 				<button class="ladda-button" data-color="blue"
-                        data-style="slide-down" onclick="myFunction(this)" id="{{ choice.id}}"
+                        data-style="slide-down"
+                        onclick="myFunction({{choice.id}})"
+                        id={{choice.id}}
                 >Cast Vote</button>
 			</section>
-
 
        </div>
     {% endfor %}
@@ -85,59 +83,17 @@
 
 <script>
     function myFunction(choice) {
-    //    document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
 
-
-         $.post("{% url 'polls:vote' question.id %}",
-             {choice: choice.id,csrfmiddlewaretoken:"{{csrf_token}}"},
+        var userid = document.getElementById("USERID").innerHTML;
+        var numcan = document.getElementById("NUMCAN").innerHTML;
+         $.post('http://127.0.0.1:3001/voting/casting',
+               {csrfmiddlewaretoken:"{{csrf_token}}",USERID:userid,CANDIDATE:choice,NUMCAN:numcan},
              function(result){
-               alert(result)
+                alert(result);
         });
-
-
-//     $(form).ajaxForm({
-//    url: url,
-//    type: 'POST',
-//    success:function () {
-//        window.location.href = herf
-//    }
-//    })
 
            Ladda.bind( '.button-demo button', { timeout: 2000 } );
     }
-
-	// Bind normal buttons
-
-
-    // Bind progress buttons and simulate loading progress
-//    Ladda.bind( '.progress-demo button', {
-//        callback: function( instance ) {
-//            var progress = 0;
-//            var interval = setInterval( function() {
-//                progress = Math.min( progress + Math.random() * 0.1, 1 );
-//                instance.setProgress( progress );
-//
-//                if( progress === 1 ) {
-//                    instance.stop();
-//                    clearInterval( interval );
-//                }
-//            }, 200 );
-//        }
-//    } );
-
-    // You can control loading explicitly using the JavaScript API
-    // as outlined below:
-
-//     var l = Ladda.create( document.querySelector( 'button' ) );
-//     l.start();
-//
-//     l.stop();
-//     l.toggle();
-//     l.isLoading();
-//     l.setProgress( 0-1 );
-
-
-
 
 </script>
 {% endblock scripts %}

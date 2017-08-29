@@ -32,6 +32,10 @@ class DetailView(generic.DetailView):
     model = Question
     # template_name = 'polls/detail.html'
     template_name = 'polls/voting_detail.html'
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context['User'] = self.request.user
+        return context
 
     def get_queryset(self):
         """
